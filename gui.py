@@ -10,7 +10,7 @@ class MainGUI(QWidget):
     data = None
     # Default is 5 (meaning the GUI will update every 5 minutes). Choose whatever number you want
     UPDATE_TIME_MIN = 5
-    statistics_link = "https://stats.foldingathome.org/donor/1437"
+    statistics_link = "https://stats.foldingathome.org/donor/8657945"
 
     # Initialize and set settings
     def __init__(self):
@@ -45,6 +45,18 @@ class MainGUI(QWidget):
             self.label = QLabel(f"{self.data[i]}: {self.data[i+1]}")
             self.label.setFixedHeight(25)
             self.generalLayout.addWidget(self.label, int(i/2), 0)
+
+        # Create the percentile data. We extract the rank and total people from the string
+        position_string = self.data[9]
+        rank, _, total = position_string.split(" ")
+        rank = int(rank.replace(',', ''))
+        total = int(total.replace(',', ''))
+
+        # Now that we have the rank and total amount of people we calculate the percent and add it as a label
+        self.percentile_label = QLabel(f"You are in the top: {str(round((rank/total*100), 2))}% of people")
+        self.percentile_label.setFixedHeight(25)
+        # int(len(self.data)/2 means that the label will be added as the last thing
+        self.generalLayout.addWidget(self.percentile_label, int(len(self.data)/2), 0)
 
     # Delete all the widgets, get new data, display the new data and print to terminal when done.
     def update_data(self):
