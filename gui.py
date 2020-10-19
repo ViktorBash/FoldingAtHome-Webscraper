@@ -3,6 +3,8 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QGridLayout
 from web_scraper import webscrape
 from PyQt5.QtCore import QTimer
+from PyQt5 import QtGui
+from PyQt5.QtGui import QPalette, QLinearGradient, QBrush, QColor
 
 
 # Main class for the GUI
@@ -24,6 +26,10 @@ class MainGUI(QWidget):
         self._centralWidget = QWidget(self)
         self._centralWidget.setLayout(self.generalLayout)
 
+        # Set a universal font
+        general_font = QtGui.QFont("Verdana", 12)
+        self.setFont(general_font)
+
         # Get and display data
         self.get_data()
         self.display_data()
@@ -43,9 +49,15 @@ class MainGUI(QWidget):
 
     # Loop through data list and add to the window as label widgets
     def display_data(self):
+        # Debug statement
+        print(self.data)
         for i in range(0, len(self.data)-1, 2):
             self.label = QLabel(f"{self.data[i]}: {self.data[i+1]}")
             self.label.setFixedHeight(25)
+            if i == 0:
+                # Make the first label (aka the name) have a larger font
+                top_label_font = QtGui.QFont("Verdana", 14)
+                self.label.setFont(top_label_font)
             self.generalLayout.addWidget(self.label, int(i/2), 0)
 
         # Create the percentile data. We extract the rank and total people from the string
@@ -72,7 +84,17 @@ class MainGUI(QWidget):
 # Function to run and display the GUI
 def main():
     stat_gui = QApplication(sys.argv)
+
+    # Creating a color palette for the gradient background of the app
+    color_pal = QPalette()
+    gradient = QLinearGradient(0, 0, 0, 400)
+    gradient.setColorAt(0.0, QColor(68, 255, 244))
+    gradient.setColorAt(1.0, QColor(0, 127, 255))
+    color_pal.setBrush(QPalette.Window, QBrush(gradient))
+
+    # Creating the app and running it
     view = MainGUI()
+    view.setPalette(color_pal)
     view.show()
     sys.exit(stat_gui.exec_())
 
