@@ -5,11 +5,12 @@ Look at the bottom to see an example of how to use the code.
 """
 
 from requests_html import HTMLSession
-session = HTMLSession()
 
 
 # Main webscraping method. Takes in URL of the statistics page
 def webscrape(url):
+    session = HTMLSession()
+
     # Start the session, run the javascript and get the HTML
     r = session.get(url)
     r.html.render()
@@ -22,21 +23,24 @@ def webscrape(url):
     # This turns the first item in the list from "Donor: <donor-name>" into two items, "Donor:" and "<donor-name">.
     # This is done to keep with the theme of every odd and every even index being a label or data.
     donor_info_list[0] = donor_info_list[0].split(" ")[1]
-    donor_info_list.insert(0, "Donor:")
+    donor_info_list.insert(0, "Donor")
 
-    # Dictionary that will contain the donor-data. This is what we will return
-    donor_dict = {}
+    # End the session in case the script is run again
+    session = None
 
-    # Loop through the list. We add all the data to donor_dict. The keys are the data labels while the values are
-    # the actual data
-    for i in range(0, 14, 2):
-        donor_dict[donor_info_list[i]] = donor_info_list[i+1]
-
-    return donor_dict
+    # Return the list
+    return donor_info_list[0:14]
 
 
 # Testing area
 if __name__ == "__main__":
     # Example usage:
-    data = webscrape('https://stats.foldingathome.org/donor/1437')
+    data = webscrape("https://stats.foldingathome.org/donor/1437")
     print(data)
+
+    import time
+
+    for i in range(5):
+        time.sleep(1)
+        data = webscrape("https://stats.foldingathome.org/donor/1437")
+        print(data)
