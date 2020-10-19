@@ -10,7 +10,9 @@ class MainGUI(QWidget):
     data = None
     # Default is 5 (meaning the GUI will update every 5 minutes). Choose whatever number you want
     UPDATE_TIME_MIN = 5
-    statistics_link = "https://stats.foldingathome.org/donor/8657945"
+
+    # CHANGE THIS VARIABLE TO YOUR STATISTICS LINK
+    statistics_link = "https://stats.foldingathome.org/donor/1437"
 
     # Initialize and set settings
     def __init__(self):
